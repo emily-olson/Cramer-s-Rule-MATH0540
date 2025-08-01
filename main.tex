@@ -1,0 +1,625 @@
+\documentclass[11pt,reqno]{amsart}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%								Packages									         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[T1]{fontenc}
+
+\usepackage{amsmath}							
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amscd}
+\usepackage{amsfonts}
+\usepackage{stmaryrd}
+\usepackage{algorithm, algorithmic}
+\usepackage{ wasysym }
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{euler}
+\renewcommand{\rmdefault}{pplx}
+\usepackage{extarrows}
+\usepackage[colorlinks, linktocpage, citecolor = red, linkcolor = blue]{hyperref}
+\usepackage{color}
+\usepackage{tikz}									
+\usepackage{fullpage}
+\usepackage[shortlabels]{enumitem}
+
+\linespread{1.1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%								Theorems 								         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newtheorem*{maintheorem}{Main Theorem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary} 
+\newtheorem{conjecture}[theorem]{Conjecture} 
+
+\theoremstyle{definition}							
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{question}[theorem]{Question}
+\newtheorem{example}[theorem]{Example}
+\newtheorem*{ogexample}{Original Example}
+\newtheorem{construction}[theorem]{Construction}
+
+
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{remarks}[theorem]{Remarks}
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%								Operators									         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newcommand{\madeline}[1]{{\color{purple} \sf  Madeline: [#1]}}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{F}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\nul}{\mathrm{null}}
+\newcommand{\range}{\mathrm{range}}
+\newcommand{\spa}{\mathrm{span}}
+\newcommand{\inv}{^{\raisebox{.2ex}{$\scriptscriptstyle-1$}}}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                          Title                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{Cramer's Rule: An Elegant Solution to Linear Systems of Equations}
+
+\author{Emily Olson}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+
+\maketitle
+\setcounter{tocdepth}{1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+   The determinant is a fundamental concept in linear algebra. In this paper, we explore how it can be employed to solve linear systems of equations, which are used to model numerous phenomena across math, engineering, and physics. The determinant is defined as a multilinear and alternating function, and the main result of this paper lies in leveraging these properties to derive explicit formulas for the unknown variables in a system. We also discuss a condition under which we can use this idea to find the cofactors of a matrix, and as a result, define its inverse.  
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{intro}
+
+Systems of linear equations are relevant across all disciplines, making them well-suited to represent real-world problems. They share variables and provide meaningful information about how those variables are related, such that the system may be used to solve for the unknown values of the variables. Their wide range of applications motivates the need for several approaches to solving them. This paper will discuss how taking the determinant of matrices resulting from expressing the system in matrix form offers solutions to the unknown variables, a method known as Cramer's Rule.
+
+
+\begin{maintheorem}[As stated in \cite{strang}]
+\label{thm:main}
+A linear system of equations in matrix form $A\mathbf{x}=\mathbf{b}$ is solved by determinants, assuming \(detA \neq 0\): 
+
+\begin{equation} \label{cramers}
+    x_1=\frac{detB_1}{detA}\hspace{0.5cm} x_2 = \frac{detB_2}{detA}\hspace{0.5cm} \dots\hspace{0.5cm}x_n = \frac{detB_n}{detA}
+\end{equation}
+
+where $B_i$ is the matrix A with the $i^{th}$ column replaced by $\mathbf{b}$.
+\end{maintheorem}
+
+
+\begin{example}
+\label{exIntro}
+Take the following system of linear equations. 
+    \begin{align*} 
+     x_1 + 2x_2 &= 10 \\ 
+    -7x_1 + 4x_2 &= 2
+    \end{align*}
+    
+    We write it in matrix form $A\mathbf{x}=\mathbf{b}$.
+    \begin{align*}
+    \begin{bmatrix}
+     1&2\\ 
+    -7&4 
+    \end{bmatrix}
+    \begin{bmatrix}
+     x_1\\ 
+     x_2 
+    \end{bmatrix}
+    = 
+     \begin{bmatrix}
+     10\\ 
+     2 
+    \end{bmatrix}
+    \end{align*}
+
+    And we apply Cramer's Rule (\ref{cramers}).
+    \begin{align*} 
+    x_1=\frac{det\begin{bmatrix} 
+    10& 2 \\
+    2 &4
+    \end{bmatrix}
+    }
+    {det\begin{bmatrix}
+    1 & 2\\
+    -7&4
+    \end{bmatrix}
+    }
+    = \frac{(10)(4)-(2)(2)}{(1)(4)-(-7)(2)}
+    = \frac{36}{18} = 2
+    \end{align*}
+
+    \begin{align*} 
+    x_2=\frac{det\begin{bmatrix} 
+    1 & 10 \\
+    -7 & 2
+    \end{bmatrix}
+    }
+    {det\begin{bmatrix}
+    1 & 2\\
+    -7&4
+    \end{bmatrix}
+    }
+    = \frac{(1)(2)-(-7)(10)}{(1)(4)-(-7)(2)}
+    = \frac{72}{18} = 4
+    \end{align*}
+    
+\end{example}
+
+The history of Cramer’s Rule is complex. French mathematician Gabriel Cramer (1704-1752) published the technique that would bear his name in 1750. However, in 1999, historian Carl B. Boyer showed that the technique had been published two years earlier by mathematician Colin Maclaurin \cite{history}. Further investigation revealed one of Maclaurin’s unpublished manuscripts dating 1729 that outlined the technique in perfect detail. It is now thought that Maclaurin began teaching the technique to his students almost twenty years before it was officially published by him or Cramer. As to why Cramer’s version became popularized while Maclaurin’s did not, it is assumed that Cramer’s notation was more directly understandable. It has been proposed that Cramer simultaneously invented the notion of a matrix and its determinant as a method to solve a system of equations\cite{muir}. 
+
+Despite its novel approach to solving systems, the Main Theorem is not very useful in practice. To solve an n x n system requires computing (n+1)! terms, which is incredibly computationally expensive and inefficient for large values of n \cite[Chapter 5.3]{strang}. However, Cramer’s Rule provides an explicit solution for unknown variables, unlike some other methods, and is particularly powerful in low-order systems. Additionally, it can be used to calculate the cofactors of a matrix under the right conditions. This helps us calculate the inverse matrix of $A$ using the transpose of the matrix of cofactors, which we will explore at the end of this paper. 
+
+
+The structure of the paper is as follows. In Section \ref{sec:background} we give the definition of the determinant and its properties, with examples. In Section \ref{sec:proof} we give the proof of the Main Theorem. In Section \ref{sec:applications}, we explain how the Main Theorem is useful for finding the cofactors and the inverse matrix. Finally, in Section \ref{sec:directions}, we propose a few prompts to explore this topic further.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Background}
+\label{sec:background}
+
+We assume the reader is familiar with systems of linear equations, matrices, as well as how to express a system in matrix form as seen in \cite[Chapters 1 and 2]{strang}. Throughout, let the solutions to the unknown variables in the system be elements of $\mathbb{R}$. 
+
+We also assume the reader is familiar with how to calculate the determinant of an input list of vectors, whether they appear in matrix form or not, as seen in \cite[Chapter 5]{strang}. We remind the reader that the determinant is fundamentally a multilinear and alternating function from $\mathbb{F}^{n \times n} \rightarrow \mathbb{F}$, and we define these properties below following \cite[Theorem 6.9]{nomizu}.
+
+In this paper, we choose to use the following notation for the determinant: $detA=\begin{vmatrix}
+A\\
+\end{vmatrix}$.
+
+\begin{definition}
+\label{def1}
+The determinant is an alternating and multilinear function from $\mathbb{F}^{n \times n} \rightarrow \mathbb{F}$. 
+
+\begin{enumerate}
+  \item A function is said to be \textit{alternating} if it obeys being sent to zero when there are repeat input vectors.
+  \begin{align*}
+    \begin{vmatrix}
+    v_1,\, &\dots,\, & v_i,\, & \dots,\, & v_i,\, &\dots,\, & v_n\\
+    \end{vmatrix}
+    = 0 
+  \end{align*}
+  \item A function is said to be \textit{multilinear} if it obeys:
+  \begin{equation*}
+  \begin{split}
+  \begin{vmatrix}
+       v_1, &\dots, & av_j + bv_k, &\dots, & v_n\\
+  \end{vmatrix}
+  = \;
+    &a
+  \begin{vmatrix}
+       v_1, &\dots, & v_j, &\dots, & v_n\\
+  \end{vmatrix} \\
+  &+ \;
+  b
+  \begin{vmatrix}
+       v_1, &\dots, & v_k, &\dots, & v_n\\
+  \end{vmatrix}
+  \end{split}
+  \end{equation*}
+  Let it be known that multilinearity may occur over the columns or the rows when taking the determinant of a matrix \cite{nomizu}.
+  
+\end{enumerate}
+
+\end{definition}
+
+We now give an example to highlight the above properties. 
+
+\begin{example}
+\label{ex:1}
+Let us take the determinant of $v_1=(1,0)$ and $v_2=(2,3)$, which we may express in matrix form. 
+    \[ (v_1, v_2) = 
+    \begin{bmatrix}
+        1 & 0 \\
+        2 & 3\\
+    \end{bmatrix}
+    \]
+    Then, we take the determinant and apply multilinearity in the first and second columns.
+    \[
+    \begin{vmatrix}
+        1 & 0 \\
+        2 & 3\\
+    \end{vmatrix} = 2
+    \begin{vmatrix}
+        1 & 0 \\
+        1 & 0\\
+    \end{vmatrix}
+    + 3
+    \begin{vmatrix}
+        1 & 0 \\
+        0 & 1\\
+    \end{vmatrix}
+    \]
+    Then, since there are repeat rows in the matrix obtained from applying mutlilinearity in the first column, we may apply the alternating property.
+    \[
+    \begin{vmatrix}
+        1 & 0 \\
+        2 & 3\\
+    \end{vmatrix} 
+    = 2(0) + 3
+    \begin{vmatrix}
+        1 & 0\\
+        0 & 1\\
+    \end{vmatrix}
+    \]
+
+    Finally, we find that the determinant of the input matrix is 3.
+
+    \[
+    (1)(3)-(2)(0) = 3 = 0 + 3*[(1)(1)-(0)(0)]
+    \]
+
+
+    As evident, the properties of the determinant hold and may help simplify the calculation of the determinant. 
+
+\end{example}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Main Theorem}
+\label{sec:proof}
+
+Now that we have introduced the determinant and its properties, we are ready to state and prove Cramer’s Rule. This theorem says that the value of each variable in a system of linear equations can be calculated directly. This is achieved by calculating the determinant of the coefficient matrix with one row replaced by the right hand side column vector and dividing it by the determinant of the coefficient matrix. 
+
+\begin{maintheorem}[{Cramer's Rule, \cite[5.3.4]{strang}}]
+A linear system of equations in matrix form $A\mathbf{x}=\mathbf{b}$ is solved by determinants, assuming \(detA \neq 0\): 
+
+\[x_1=\frac{|B_1|}{|A|}\hspace{0.5cm} x_2 = \frac{|B_2|}{|A|}\hspace{0.5cm} \dots\hspace{0.5cm}x_n = \frac{|B_n|}{|A|}\]
+where $B_i$ is the matrix A with the $i^{th}$ column replaced by $\mathbf{b}$.
+\end{maintheorem}
+
+We follow the proof given in \cite[5.3]{strang}.
+
+\begin{proof} Let there be an $nxn$ system of linear equations.
+\begin{align*}
+a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n = b_1\\
+a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n = b_2\\
+\vdots\\
+a_{n1}x_1 + a_{n2}x_2 + \cdots + a_{nn}x_n = b_n\\
+\end{align*}
+First, we convert the system into $A\mathbf{x}=\mathbf{b}$ form as seen in \cite[Chapters 1.3 and 2.1]{strang}.
+$$
+\begin{bmatrix}
+    a_{11} & a_{12} & \cdots & a_{1n}\\
+    a_{21} & a_{22} & \cdots & a_{2n}\\
+    \vdots & \ddots & \ddots & \vdots\\
+    a_{n1} & a_{n2} & \cdots & a_{nn}\\
+\end{bmatrix}
+\begin{bmatrix}
+    x_{1}\\
+    x_{2}\\
+    \vdots\\
+    x_{n}\\
+\end{bmatrix}
+= 
+\begin{bmatrix}
+    b_{1}\\
+    b_{2}\\
+    \vdots\\
+    b_{n}\\
+\end{bmatrix}
+$$
+Then, for clarity, let us condense the columns into vectors labeled $\mathbf{a_1}, \mathbf{a_2}, \cdots,\mathbf{a_n}$, where $\mathbf{a_i}$ is the vector containing all the coefficients of $x_i$ in the system as in \cite[Chapter 1.1]{strang}. Similarly, we condense the column vector of $\mathbf{b}$ into a single entry that is a vector containing all $n$ constants of the right hand side of the system.
+$$
+\begin{bmatrix}
+    \mathbf{a_1} & \mathbf{a_2} & \cdots& \mathbf{a_n}\\
+\end{bmatrix}
+\begin{bmatrix}
+    x_{1}\\
+    x_{2}\\
+    \vdots\\
+    x_{n}\\
+\end{bmatrix}
+= 
+\begin{bmatrix}
+    \mathbf{b}\\
+\end{bmatrix}
+$$
+
+Clearly, we have the following by matrix multiplication as in \cite[Chapter 1.3]{strang}. \begin{equation}\label{biseq}
+    A\mathbf{x} = x_1\mathbf{a_1} + x_2\mathbf{a_2} +\cdots + x_n\mathbf{a_n} =\mathbf{b}
+\end{equation}
+
+Now, let us replace the first column of $A$, entry $\mathbf{a_1}$, with $\mathbf{b}$. We call this matrix $B_1$.
+\[
+B_1 = 
+\begin{bmatrix}
+    \mathbf{b} & \mathbf{a_{2}} & \cdots & \mathbf{a_{n}}\\
+\end{bmatrix}
+\]
+
+However, by (\ref{biseq}), we can replace $\mathbf{b}$ and rewrite $B_1$.
+\[ B_1 = 
+\begin{bmatrix}
+    x_1\mathbf{a_1} + x_2\mathbf{a_2} +\cdots + x_n\mathbf{a_n} & \mathbf{a_{2}} & \cdots & \mathbf{a_{n}}\\
+\end{bmatrix}
+\]
+
+Then, it remains to be shown that we can isolate $x_1$ by taking the determinant of $B_1$, which contains simply one row of vectors.
+\[ 
+\begin{vmatrix}
+    B_1\\
+\end{vmatrix}
+= 
+\begin{vmatrix}
+    x_1\mathbf{a_1} + x_2\mathbf{a_2} +\cdots + x_n\mathbf{a_n} & \mathbf{a_{2}} & \cdots & \mathbf{a_{n}}\\
+\end{vmatrix}
+\]
+
+By \textit{multilinearity} defined in \ref{def1} over the first row, this is equivalent to the following.
+
+\[
+ = \; x_1\!
+    \begin{vmatrix}
+        \mathbf{a_1} & \mathbf{a_{2}} & \cdots & \mathbf{a_{n}}\\
+    \end{vmatrix}
+    +x_2\!
+    \begin{vmatrix}
+        \mathbf{a_2} & \mathbf{a_{2}} & \cdots & \mathbf{a_{n}}\\
+    \end{vmatrix}
+    \; + \cdots\\
+    +x_n\!
+    \begin{vmatrix}
+        \mathbf{a_n} & \mathbf{a_{2}} & \cdots & \mathbf{a_{n}}\\
+    \end{vmatrix}\\
+\]
+
+
+By the \textit{alternating} property defined in \ref{def1}, all the determinants with repeat elements go to zero and we are left with one term. 
+\[
+= x_1\!
+\begin{vmatrix}
+     \mathbf{a_1} & \mathbf{a_{2}} & \cdots & \mathbf{a_{n}}\\
+\end{vmatrix}
+\]
+
+And we note that 
+$\begin{vmatrix}
+     \mathbf{a_1} & \mathbf{a_{2}} & \cdots & \mathbf{a_{n}}\\
+\end{vmatrix}$ is simply  
+$\begin{vmatrix}
+    A\\
+\end{vmatrix}$.
+
+
+Now, we observe the desired result.
+\[
+\begin{vmatrix}
+    B_1\\
+\end{vmatrix} 
+= x_1\!
+\begin{vmatrix}
+    A\\
+\end{vmatrix} 
+\]
+
+\[
+x_1 = \frac{
+\begin{vmatrix}
+    B_1\\
+\end{vmatrix}
+}{
+\begin{vmatrix}
+    A\\
+\end{vmatrix}
+}
+\]
+
+The process follows similarly for every column $i$ of $A$. We replace it with $\mathbf{b}$, take the determinant of the new matrix, and apply the multilinear and alternating properties to solve for $x_i$.
+\[ x_i = \frac{|B_i|}{|A|}
+\]
+
+\end{proof}
+
+We must consider that Cramer's Rule only holds when $|A| \neq 0$. Unfortunately, in the case that $|A| = 0$, we can only say something meaningful in the 2x2 case. If $|A| = 0$ and all $|B_i| = 0$, the system is indeterminate and holds more than one solution. If at least one $|B_i| \neq 0$, the system is inconsistent as stated in \cite{det}.
+In the 3x3 and above case, we can say that the system is inconsistent if at least one $|B_i| \neq 0$. However, we cannot say that the system is indeterminate if all $|B_i| = 0$.\\ 
+
+
+We now return to the example in Section \ref{intro} to illustrate the Main Theorem.
+
+\begin{example}
+Consider Example \ref{exIntro}. 
+\begin{align} \label{eq1}
+     x_1 + 2x_2 &= 10 \\ 
+    -7x_1 + 4x_2 &= 2\\ \nonumber
+\end{align} 
+
+In Section \ref{intro} we found that $x_1 = 2$ and $x_2=4$ via Cramer's Rule.  We now solve the system using elimination to confirm our result.
+\begin{equation*}
+\begin{array}{c}
+    \;\;\;-7x_1 + 4x_2 = 2 \\
+    \underline{\phantom{-}-2(x_1 + 2x_2  = 10)} \\
+    \;\;\;\;\;\;\;-9x_1 + 0x_2 = -18\\
+    \;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\; x_1 = 2
+\end{array}
+\end{equation*}
+Then, plugging in $x_1=2$ into (\ref{eq1}), we find 
+\begin{align*} 
+     2 + 2x_2 &= 10 \\ 
+     x_2 &= 4
+\end{align*}
+Thus, Cramer's Rule provided the correct solutions to our unknown variables and the Main Theorem is satisfied. 
+\end{example}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Cofactors and The Inverse Matrix}
+\label{sec:applications}
+
+The Main Theorem may be ill suited for large systems, but it lends itself impressively to solving for the cofactors and inverse of a matrix. 
+
+\begin{proposition}[{\cite[5.3]{strang}}]\label{4.1}
+When the right side is a column of the identity matrix I, the
+determinant of each matrix $B_i$ in Cramer's Rule is a cofactor.
+\end{proposition}
+
+We now see an example with a 2x2 system illustrating this proposition.
+
+\begin{example}
+\label{4}
+Let us consider a matrix $A$ and its cofactor matrix $C$. We leave the process of calculating cofactors to \cite[Chapter 5.2]{strang}
+\begin{align*}A &=
+\begin{bmatrix}
+    1 & 2\\
+    3 & 4\\
+\end{bmatrix}\\
+C &= 
+\begin{bmatrix}
+    4 & -3\\
+    -2 & 1\\
+\end{bmatrix}
+\end{align*}
+
+Let us now consider $AA\inv = I$ as two systems of equations where the right hand side is the first and second column of the $2x2$ identity matrix in the first and second system respectively. 
+\[
+\begin{bmatrix}
+    1 & 2\\
+    3 & 4\\
+\end{bmatrix}
+\begin{bmatrix}
+    x_1\\
+    x_2\\
+\end{bmatrix}
+= 
+\begin{bmatrix}
+    1\\
+    0\\
+\end{bmatrix}
+\;\;\;\;\; \text{and}  \;\;\;\;\;
+\begin{bmatrix}
+    1 & 2\\
+    3 & 4\\
+\end{bmatrix}
+\begin{bmatrix}
+    y_1\\
+    y_2\\
+\end{bmatrix}
+= 
+\begin{bmatrix}
+    0\\
+    1\\
+\end{bmatrix}
+\]
+By Cramer's Rule (\ref{cramers}), we have the following for the $B_i$ matrices.
+\[
+B_{11} = \begin{bmatrix}
+    1 & 2\\
+    0 & 4\\
+\end{bmatrix} \;\;\;\;
+B_{12} = \begin{bmatrix}
+    1 & 1\\
+    3 & 0\\
+\end{bmatrix}\;\;\;\; \text{and} \;\;\;\;
+B_{21} = \begin{bmatrix}
+    0 & 2\\
+    1 & 4\\
+\end{bmatrix}\;\;\;\;
+B_{22} = \begin{bmatrix}
+    1 & 0\\
+    3 & 1\\
+\end{bmatrix}
+\]
+And we calculate the determinant of each.
+\[
+|B_{11}| = 4 \;\;\;\;
+|B_{12}| = -3 \;\;\;\; \text{and}\;\;\;\;
+|B_{21}| = -2 \;\;\;\;
+|B_{22}| = 1 
+\]
+We observe that the determinants of $B_i$ are in fact the cofactors found in $C$ and \ref{4.1} holds.
+\end{example}
+Furthermore, we can use Cramer's Rule (\ref{cramers}) to express the solutions to the unknown variables, which we keep in mind make up the columns of $A\inv$.
+\[
+|A| = (1)(4) - (2)(3) = -2
+\]
+\[
+x_1 = \frac{4}{-2}
+\;\;\;\;\; x_2 = \frac{-3}{-2}\;\;\;\;\; \text{and}
+\;\;\;\;\;y_1 = \frac{-2}{-2}
+\;\;\;\;\;y_2 = \frac{1}{-2}
+\]
+
+\begin{corollary}[{\cite[5.3.6]{strang}}] The inverse of a matrix $A$ is calculated by dividing the transpose of the cofactor matrix by the determinant of $A$.
+\[
+A\inv = \frac{C^T}{|A|}
+\]
+
+\end{corollary}
+
+This fact follows directly from applying Cramer's Rule to solve for the unknown variables in a system where the right hand side is a column of the identity matrix $I$.
+
+
+We return to Example \ref{4} to illustrate this result.
+
+\begin{example}
+In \ref{4}, we saw that $A\inv$ is made up of the cofactors of $A$ divided by the determinant of $A$.
+\[
+A\inv = 
+ \begin{bmatrix}
+        x_1 & y_1\\
+        x_2 & y_2\\
+    \end{bmatrix}
+    = 
+    \begin{bmatrix}
+        \frac{4}{-2} &\frac{-2}{-2}\\
+        \frac{-3}{-2} & \frac{1}{-2}\\
+    \end{bmatrix}
+\]
+We can pull out $\frac{1}{-2}$. Understanding the process of taking the transpose of a matrix is left to \cite[Chapter 2.7]{strang}
+\[
+A\inv = \frac{1}{-2} \begin{bmatrix}
+    4 & -2\\
+    -3 & 1\\
+\end{bmatrix} = \frac{1}{|A|}C^T
+\]
+
+This is the result we expected. Hence, Cramer's Rule helped determine the cofactors and inverse matrix of $A$.
+\end{example}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Future directions}
+\label{sec:directions}
+
+In this section, we give some directions for future study.
+
+\begin{question}
+Can Cramer's Rule be extended to handle systems of linear equations where the coefficient matrix is not square? What challenges or modifications are involved?
+\end{question}
+
+
+\begin{question}
+The computational complexity of Cramer's Rule makes it impractical. Is there a way to increase its efficiency? Or, under what circumstances is Cramer's Rule more efficient than other methods, such as Gaussian Elimination, and what does that reveal about how to best employ it?
+\end{question}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{abbrv}
+\bibliography{sample.bib}
+
+\end{document}
